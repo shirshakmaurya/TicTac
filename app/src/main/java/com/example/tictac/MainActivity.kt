@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     var PLAYER = true
     var TURN_COUNT = 0
     lateinit var textView1:TextView;
-    var boarStatus = Array(3){IntArray(3)}
+    var boardStatus = Array(3){IntArray(3)}
     lateinit var board: Array<Array<Button>>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
         for(i in 0..2){
             for(j in 0..2){
-                boarStatus[i][j]=-1
+                boardStatus[i][j]=-1
                 board[i][j].text = ""
                 board[i][j].isEnabled = true;
             }
@@ -101,10 +101,72 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
 
         if(TURN_COUNT==9)
             updateTextView("MATCH DRAW")
+
+        checkWinner()
+    }
+
+    private fun checkWinner() {
+       //rows
+        for(i in 0..2){
+            if(boardStatus[i][0]==boardStatus[i][1] && boardStatus[i][0] == boardStatus[i][2]){
+                if(boardStatus[i][0]==1) {
+                    updateTextView("player X is winner")
+                    break
+                }
+                else if(boardStatus[i][0]==0){
+                    updateTextView("player O is winner")
+                    break
+                }
+            }
+        }
+        //col
+        for(i in 0..2) {
+            if (boardStatus[0][i] == boardStatus[1][i] && boardStatus[0][i] == boardStatus[2][i]) {
+                if (boardStatus[0][i] == 1) {
+                    updateTextView("player X is winner")
+                    break
+                } else if (boardStatus[0][i] == 0) {
+                    updateTextView("player O is winner")
+                    break
+                }
+            }
+        }
+
+        //diagonal1
+        if (boardStatus[0][0] == boardStatus[1][1] && boardStatus[0][0] == boardStatus[2][2]) {
+            if (boardStatus[0][0] == 1) {
+                updateTextView("player X is winner")
+
+            } else if (boardStatus[0][0] == 0) {
+                updateTextView("player O is winner")
+            }
+        }
+        ///diagonal2
+        if (boardStatus[0][2] == boardStatus[1][1] && boardStatus[0][2] == boardStatus[2][0]) {
+            if (boardStatus[0][2] == 1) {
+                updateTextView("player X is winner")
+
+            } else if (boardStatus[0][2] == 0) {
+                updateTextView("player O is winner")
+            }
+        }
+
+
+    }
+
+    private fun disableButton() {
+        for(i in 0..2){
+            for(j in 0..2){
+                board[i][j].isEnabled = false
+            }
+        }
     }
 
     private fun updateTextView(s: String) {
                textView1.text = s
+         if(s.contains("winner")){
+             disableButton()
+         }
     }
 
     private fun updateValue(row: Int, col: Int, player: Boolean) {
@@ -113,6 +175,6 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         board[row][col].setText(text)
         board[row][col].isEnabled = false
 
-        boarStatus[row][col] = value
+        boardStatus[row][col] = value
     }
 }
